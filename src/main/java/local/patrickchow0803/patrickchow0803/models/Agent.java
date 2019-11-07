@@ -1,6 +1,10 @@
 package local.patrickchow0803.patrickchow0803.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "agents")
@@ -8,7 +12,6 @@ public class Agent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
     private long agentcode;
 
     private String agentname;
@@ -17,9 +20,11 @@ public class Agent {
     private String phone;
     private String country;
 
-    public Agent(){
-        
-    }
+    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = false)
+    @JsonIgnoreProperties("customer")
+    List<Customer> customers = new ArrayList<>();
+
+    public Agent(){}
 
     public Agent(String agentname, String workingarea, double commission, String phone, String country) {
         this.agentname = agentname;
@@ -75,5 +80,13 @@ public class Agent {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 }
